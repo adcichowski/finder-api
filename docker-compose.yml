@@ -1,0 +1,14 @@
+services:
+  database-finder-app:
+    image: postgres:16.1
+    container_name: finder-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: finder-database
+    volumes:
+      - my_dbdata:/var/lib/postgresql/data
+volumes:
+  my_dbdata:
