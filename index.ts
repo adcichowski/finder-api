@@ -1,6 +1,8 @@
 import fastify from "fastify";
-import { db } from "src/db";
-
+import "dotenv/config";
+import fastifyCookie from "@fastify/cookie";
+import cors from "@fastify/cors";
+import oauthPlugin from "@fastify/oauth2";
 const server = fastify({
   logger: {
     transport: {
@@ -13,17 +15,46 @@ const server = fastify({
   },
 });
 
-server.get("/ping", async (req, reply) => {
-  const allUsers = "xd";
-  console.log(process.env.DATABASE_URL);
-  console.log(allUsers, "HOOOOO");
-  reply.send({ hi: "hix" });
+server.register(cors, {
+  origin: "*",
 });
-
-server.listen({ port: 8080 }, (err, address) => {
+server.register(fastifyCookie, {
+  parseOptions: {
+    secure: true,
+    sameSite: "lax",
+  },
+});
+server.listen({ port: 8000 }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
   }
   console.log(`Server listening at ${address}`);
+});
+
+server.register(oauthPlugin, {
+  name: "googleOAuth2",
+  scope: ["profile", "email"],
+  credentials: {
+    client: {
+      id: process.env.GOOGLE_CLIENT_ID,
+      secret: process.env.GOOGLE_SECRET_KEY,
+    },
+    auth: oauthPlugin.GOOGLE_CONFIGURATION,
+  },
+  startRedirectPath: "/login/google",
+  callbackUri: "http://localhost:8000/login/google/callback",
+  cookie: {
+    secure: true,
+    sameSite: "lax",
+  },
+});
+
+server.get("/login/google/callback", async function (request, reply) {
+  const { token } =
+    await server.googleOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
+
+  console.log(token.access_token);
+
+  reply.send({ access_token: token.access_token });
 });

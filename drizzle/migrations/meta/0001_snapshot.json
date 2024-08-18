@@ -1,16 +1,16 @@
 {
-  "id": "2e6de136-585d-4c11-9549-daef262bb369",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "131b1e45-24f9-4879-884a-a6c190bee31f",
+  "prevId": "8cd0a5f6-f92c-4650-b607-5dbf4bab51ce",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.user": {
-      "name": "user",
+    "public.users": {
+      "name": "users",
       "schema": "",
       "columns": {
-        "auth0Id": {
-          "name": "auth0Id",
-          "type": "varchar(120)",
+        "id": {
+          "name": "id",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
@@ -45,6 +45,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "refreshToken": {
+          "name": "refreshToken",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

@@ -6,6 +6,7 @@
     "baseUrl": "./",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true
   }
 }

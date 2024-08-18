@@ -1,11 +1,11 @@
 import { config } from "dotenv";
-import { defineConfig } from "drizzle-kit";
+import { Config, defineConfig } from "drizzle-kit";
 config({ path: ".env" });
 export default defineConfig({
   schema: "./src/db/schema.ts",
-  out: "./supabase/migrations",
+  out: "./drizzle/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: "postgres://postgres:postgres@localhost:5432/finder-database",
   },
-});
+}) satisfies Config;
