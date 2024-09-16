@@ -2,6 +2,7 @@
   "name": "finder-api",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node index.js",
@@ -12,16 +13,21 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
-    "@fastify/cookie": "^9.3.1",
+    "@fastify/cookie": "^9.4.0",
     "@fastify/cors": "^9.0.1",
     "@fastify/express": "^3.0.0",
+    "@fastify/jwt": "^8.0.1",
     "@fastify/oauth2": "^7.9.0",
     "@fastify/websocket": "^10.0.1",
+    "@supabase/ssr": "^0.5.0",
+    "@supabase/supabase-js": "^2.45.2",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.23.1",
     "drizzle-orm": "^0.32.2",
+    "envalid": "^8.0.0",
     "express-oauth2-jwt-bearer": "^1.6.0",
     "fastify": "^4.28.1",
+    "jwt-decode": "^4.0.0",
     "pg": "^8.12.0"
   },
   "devDependencies": {

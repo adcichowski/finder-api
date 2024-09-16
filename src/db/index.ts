@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Client } from "pg";
+import pg from "pg";
 
-const client = new Client({
+const client = new pg.Client({
   connectionString:
     "postgres://postgres:postgres@localhost:5432/finder-database",
 });
