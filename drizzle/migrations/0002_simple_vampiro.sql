@@ -1,3 +1,0 @@
-CREATE TABLE IF NOT EXISTS "offers" (
-	"id" serial PRIMARY KEY NOT NULL
-);

@@ -2,9 +2,7 @@ import fastify from "fastify";
 import "dotenv/config";
 import fastifyCookie from "@fastify/cookie";
 import cors from "@fastify/cors";
-import jwt from "@fastify/jwt";
-import { env } from "src/utils/env";
-import { createClient } from "src/lib/supabase";
+import { getUserByJWT } from "src/users/users.service";
 
 const server = fastify({
   logger: {
@@ -22,6 +20,23 @@ server.register(cors, {
   origin: "*",
 });
 
+server.addHook("preParsing", async (request, reply, payload) => {
+  try {
+    const token = request.headers.authorization?.split(" ")[1];
+    const { data } = await getUserByJWT({ jwt: token });
+    if (data.user === null) {
+      return reply
+        .code(401)
+        .send({ err: "Problem to recognize error during authorization." });
+    }
+    request.authUser = { email: data.user.email, id: data.user.id };
+  } catch (error) {
+    if (error instanceof Error) {
+      reply.code(401).send({ err: error.message });
+    }
+  }
+  return payload;
+});
 server.register(fastifyCookie);
 server.listen({ port: 8000 }, (err, address) => {
   if (err) {
@@ -32,10 +47,6 @@ server.listen({ port: 8000 }, (err, address) => {
 });
 
 server.get("/", async function (request, reply) {
-  const token = request.headers.authorization?.split(" ")[1];
-
-  const supabase = createClient();
-  const res = await supabase.auth.getUser(token);
-  console.log(res, token);
-  reply.send({ user: res.data });
+  console.log(request.authUser);
+  reply.code(200).send({ hello: request.authUser });
 });
