@@ -1,8 +1,43 @@
+import { db } from "src/db";
+import { users } from "src/db/schemas/users";
 import { supabase } from "src/lib/supabase";
+import { schemaJWT } from "./users.schemas";
 
-export const getUserByJWT = async ({ jwt }: { jwt: string | undefined }) => {
-  if (!jwt) throw new Error("Token is not provided.");
-  const res = await supabase.auth.getUser(jwt);
-  if (!res) throw new Error("Problem with JWT token.");
-  return res;
+export const getUserByJWT = async ({ jwt }: { jwt: string }) => {
+  try {
+    const { data } = await supabase.auth.getUser(jwt);
+    const userJwt = schemaJWT.parse(data.user);
+    return userJwt;
+  } catch (error) {
+    throw new Error("Problem with decoded token");
+  }
+};
+
+export const getUserByEmail = async ({
+  emailFromJwt,
+}: {
+  emailFromJwt: string;
+}) => {
+  return await db.query.users.findFirst({
+    where: ({ email }, { eq }) => eq(email, emailFromJwt),
+  });
+};
+
+export const createUser = async ({
+  firstName = "",
+  lastName = "",
+  email,
+}: {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}) => {
+  return await db
+    .insert(users)
+    .values({
+      email,
+      firstName,
+      lastName,
+    })
+    .returning();
 };
